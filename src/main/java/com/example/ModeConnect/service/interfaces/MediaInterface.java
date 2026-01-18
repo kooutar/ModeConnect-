@@ -1,0 +1,4 @@
+package com.example.ModeConnect.service.interfaces;
+
+public class MediaInterface {
+}
