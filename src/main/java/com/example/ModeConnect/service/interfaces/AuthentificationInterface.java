@@ -1,4 +1,4 @@
 package com.example.ModeConnect.service.interfaces;
 
-public interface ImagesInterface {
+public interface AuthentificationInterface {
 }

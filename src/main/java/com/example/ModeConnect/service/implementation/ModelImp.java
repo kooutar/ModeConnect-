@@ -1,4 +1,4 @@
 package com.example.ModeConnect.service.implementation;
 
-public class ModelImage {
+public class ModelImp {
 }

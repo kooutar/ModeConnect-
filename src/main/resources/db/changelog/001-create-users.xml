@@ -23,12 +23,15 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="role" type="VARCHAR(20)">
-                <constraints nullable="false"/>
+            <column name="profile_picture_url" type="VARCHAR(255)">
+                <constraints nullable="true"/>
             </column>
 
-            <column name="profile_picture" type="VARCHAR(255)">
-                <constraints nullable="true"/>
+
+            <column name="role" type="VARCHAR(20)">
+                <constraints
+                        nullable="false"
+                        checkConstraint="role IN ('ROLE_CLIENT', 'ROLE_CREATOR')"/>
             </column>
         </createTable>
     </changeSet>
