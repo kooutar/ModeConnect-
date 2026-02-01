@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -16,10 +19,15 @@ public class AuthController {
     private final AuthentificationImpl authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(
+    public ResponseEntity<Map<String, Object>> register(
             @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(authService.register(request));
+        authService.register(request);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Registration successful");
+        // remplace par l'id réel
+        return ResponseEntity.ok(response);
+
     }
 
     @PostMapping("/login")
