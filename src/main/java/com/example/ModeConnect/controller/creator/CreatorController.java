@@ -3,7 +3,6 @@ package com.example.ModeConnect.controller.creator;
 import com.example.ModeConnect.DTO.request.ModelRequestDto;
 import com.example.ModeConnect.DTO.response.ModelResponseDto;
 import com.example.ModeConnect.service.interfaces.ModelInterface;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

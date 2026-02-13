@@ -16,5 +16,5 @@ public class ModelRequestDto {
     private BigDecimal purchasePrice;
     private BigDecimal rentalPrice;
     private Long creatorId;
-    private List<ModelMediaDto> mediaList;
+    private List<ModelMediaRequestDto> mediaList;
 }

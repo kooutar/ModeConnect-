@@ -1,6 +1,8 @@
 package com.example.ModeConnect.service.implementation;
 
+import com.example.ModeConnect.DTO.request.ModelMediaRequestDto;
 import com.example.ModeConnect.DTO.request.ModelRequestDto;
+import com.example.ModeConnect.DTO.response.ModelMediaDto;
 import com.example.ModeConnect.DTO.response.ModelResponseDto;
 import com.example.ModeConnect.Repository.ModelRepository;
 import com.example.ModeConnect.Repository.UserRepository;
@@ -17,6 +19,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,8 +45,20 @@ public class ModelImp implements ModelInterface {
         model.setCreator(creator);
 
         // lier chaque media au model (IMPORTANT)
-        if (model.getMediaList() != null) {
-            model.getMediaList().forEach(media -> media.setModel(model));
+        // 🔥 FIX MEDIA RELATION
+        if (dto.getMediaList() != null) {
+            List<ModelMedia> mediaList = new ArrayList<>();
+
+            for (ModelMediaRequestDto mediaDto : dto.getMediaList()) {
+                ModelMedia media = new ModelMedia();
+                media.setMediaUrl(mediaDto.getMediaUrl());
+                media.setMediaType(mediaDto.getMediaType()); // ⚠️ ICI
+                media.setModel(model);                       // FK
+
+                mediaList.add(media);
+            }
+
+            model.setMediaList(mediaList);
         }
 
         Model saved = modelRepository.save(model);

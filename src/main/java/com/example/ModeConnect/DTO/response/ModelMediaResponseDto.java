@@ -4,7 +4,7 @@ import com.example.ModeConnect.Enums.MediaType;
 import lombok.Data;
 
 @Data
-public class ModelMediaDto {
+public class ModelMediaResponseDto {
     private String mediaUrl;
-    private MediaType mediaType; // ⚠️ PAS String
+    private MediaType mediaType;
 }

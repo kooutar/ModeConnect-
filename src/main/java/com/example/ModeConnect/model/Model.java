@@ -29,7 +29,7 @@ public class Model {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @OneToMany(mappedBy = "model")
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ModelMedia> mediaList = new ArrayList<>();
 
 }
