@@ -1,4 +1,7 @@
 package com.example.ModeConnect.service.implementation;
 
-public class MediaImpl {
+import com.example.ModeConnect.service.interfaces.MediaInterface;
+
+public class MediaImpl implements MediaInterface {
+
 }

@@ -59,7 +59,7 @@ public class AuthentificationImpl  implements AuthentificationInterface {
         }
       CustomUserDetails userDetails= new CustomUserDetails(user);
         // Génération des tokens JWT
-        String token = jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken(userDetails,user.getRole());
         String refreshToken = jwtService.generateRefreshToken(userDetails);
 
         // Mapper User -> LoginResponse et ajouter tokens
