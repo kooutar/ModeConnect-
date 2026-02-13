@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalException {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleNotFound(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("err "+ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidation(MethodArgumentNotValidException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ex.getBindingResult().getFieldError().getDefaultMessage());
+                .body("les donnes invalides"+ex.getBindingResult().getFieldError().getDefaultMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)

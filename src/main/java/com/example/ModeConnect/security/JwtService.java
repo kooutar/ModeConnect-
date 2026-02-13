@@ -23,11 +23,12 @@ public class JwtService {
     @Value("${jwt.refresh-expiration}")
     private long refreshExpirationTime;
 
-  public SecretKey getSecretKey(){
+  private SecretKey getSecretKey(){
       return Keys.hmacShaKeyFor(secretKey.getBytes());
   }
 
   public String extractUsername(String token){
+
       return extractClaim(token, Claims::getSubject);
   }
 
@@ -52,8 +53,9 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, String role) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role); // ajoute le rôle
         return createToken(claims, userDetails.getUsername(), expirationTime);
     }
 
@@ -75,6 +77,10 @@ public class JwtService {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
 }

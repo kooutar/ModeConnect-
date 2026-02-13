@@ -3,10 +3,13 @@ package com.example.ModeConnect.model;
 
 import com.example.ModeConnect.Enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.spi.ToolProvider;
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "users")
