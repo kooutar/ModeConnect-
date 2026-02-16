@@ -2,7 +2,6 @@ package com.example.ModeConnect.service.implementation;
 
 import com.example.ModeConnect.DTO.request.ModelMediaRequestDto;
 import com.example.ModeConnect.DTO.request.ModelRequestDto;
-import com.example.ModeConnect.DTO.response.ModelMediaDto;
 import com.example.ModeConnect.DTO.response.ModelResponseDto;
 import com.example.ModeConnect.Repository.ModelRepository;
 import com.example.ModeConnect.Repository.UserRepository;
@@ -12,8 +11,6 @@ import com.example.ModeConnect.model.ModelMedia;
 import com.example.ModeConnect.model.User;
 import com.example.ModeConnect.service.interfaces.ModelInterface;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;

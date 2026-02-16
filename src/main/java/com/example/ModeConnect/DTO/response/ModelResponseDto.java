@@ -15,5 +15,6 @@ public class ModelResponseDto {
     private BigDecimal rentalPrice;
     private Long creatorId;
     private String creatorName;
+    private Boolean available;
     private List<ModelMediaDto> mediaList;
 }

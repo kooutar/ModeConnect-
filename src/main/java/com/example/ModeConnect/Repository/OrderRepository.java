@@ -1,0 +1,8 @@
+package com.example.ModeConnect.Repository;
+
+import com.example.ModeConnect.model.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrderRepository extends JpaRepository<Order,Long> {
+
+}

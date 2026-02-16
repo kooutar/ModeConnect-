@@ -24,6 +24,8 @@ public class Model {
     private String description;
     private BigDecimal purchasePrice;
     private BigDecimal rentalPrice;
+    @Column(name = "disponibilite", nullable = false)
+    private  boolean available=true;
 
     @ManyToOne
     @JoinColumn(name = "creator_id")

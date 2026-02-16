@@ -1,0 +1,24 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="007-add-status-to-orders" author="kaoutar">
+
+        <addColumn tableName="orders">
+            <column name="status" type="VARCHAR(20)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <!-- Pour les commandes déjà existantes -->
+        <update tableName="orders">
+            <column name="status" value="PENDING"/>
+            <where>status IS NULL</where>
+        </update>
+
+    </changeSet>
+
+</databaseChangeLog>

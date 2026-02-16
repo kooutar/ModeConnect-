@@ -1,0 +1,11 @@
+package com.example.ModeConnect.service.interfaces;
+
+import com.example.ModeConnect.DTO.request.OrderRequestDto;
+import com.example.ModeConnect.DTO.response.OrderResponseDto;
+import com.example.ModeConnect.mapper.OrderMapper;
+import com.example.ModeConnect.model.User;
+
+public interface OrderServiceInterface {
+    public OrderResponseDto createOrder(
+            OrderRequestDto dto,Long modelId);
+}
