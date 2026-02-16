@@ -9,5 +9,8 @@
     <include file="db/changelog/001-create-users.xml"/>
     <include file="db/changelog/002-create-table-model.xml"/>
     <include file="db/changelog/003-create-table-model-media.xml"/>
+    <include file="db/changelog/004-create-table-orders.xml"/>
+    <include file="db/changelog/0021-add-disponibilite-to-model.xml"/>
+    <include file="db/changelog/041-add-reservation-days-to-orders.xml"/>
 
 </databaseChangeLog>

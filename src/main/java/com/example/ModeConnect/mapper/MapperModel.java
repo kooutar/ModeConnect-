@@ -24,6 +24,7 @@ public interface MapperModel {
     // Request DTO → Entity
     // Request DTO → Entity
     @Mapping(source = "creatorId", target = "creator", qualifiedByName = "idToUser")
+    @Mapping(target = "id", ignore = true) // ⚡ Ignorer l'id auto-généré
     Model toEntity(ModelRequestDto dto);
 
 
