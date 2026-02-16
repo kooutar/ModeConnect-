@@ -17,7 +17,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Spring Security attend des GrantedAuthority
         return List.of(new SimpleGrantedAuthority(user.getRole()));
     }
 
@@ -49,5 +48,9 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true; // adapter si besoin
+    }
+
+    public Long getId() {
+       return user.getId();
     }
 }

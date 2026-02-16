@@ -18,6 +18,7 @@ public interface OrderMapper {
     @Mapping(target = "client", source = "client")  // l'objet User
     @Mapping(target = "model", source = "model")    // l'objet Model
     @Mapping(target = "orderType", source = "dto.orderType") // si orderType vient du DTO
+    @Mapping(target = "status", ignore = true) // par défaut PENDING
     Order toEntity(OrderRequestDto dto, User client, Model model);
 
     @Mapping(target = "clientId", source = "client.id")

@@ -12,5 +12,8 @@
     <include file="db/changelog/004-create-table-orders.xml"/>
     <include file="db/changelog/0021-add-disponibilite-to-model.xml"/>
     <include file="db/changelog/041-add-reservation-days-to-orders.xml"/>
+    <include file="db/changelog/042-add-reservation-date-to-orders.xml"/>
+    <include file="db/changelog/043-add-status-to-orders.xml"/>
+
 
 </databaseChangeLog>

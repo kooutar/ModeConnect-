@@ -3,6 +3,7 @@ package com.example.ModeConnect.DTO.request;
 import com.example.ModeConnect.Enums.OrderType;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Data
 public class OrderRequestDto {
@@ -14,4 +15,5 @@ public class OrderRequestDto {
     private OrderType orderType;
     private LocalDateTime createdAt;
     private Integer reservation_days;
+    private LocalDate reservationDate;
 }

@@ -1,11 +1,13 @@
 package com.example.ModeConnect.model;
 
+import com.example.ModeConnect.Enums.OrderStatus;
 import com.example.ModeConnect.Enums.OrderType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -33,6 +35,12 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(name = "order_type", nullable = false)
     private OrderType orderType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private OrderStatus status = OrderStatus.PENDING;
+
+    @Column(name = "reservation_date")
+    private LocalDate reservationDate;
 
     private  int reservation_days;
 
