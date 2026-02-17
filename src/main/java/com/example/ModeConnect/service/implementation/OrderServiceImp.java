@@ -11,6 +11,7 @@ import com.example.ModeConnect.mapper.OrderMapper;
 import com.example.ModeConnect.model.Model;
 import com.example.ModeConnect.model.Order;
 import com.example.ModeConnect.model.User;
+import com.example.ModeConnect.service.implementation.mail.EmailNotificationService;
 import com.example.ModeConnect.service.interfaces.OrderServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,8 @@ public class OrderServiceImp implements OrderServiceInterface {
     private final UserRepository userRepository;
     private final ModelRepository modelRepository;
     private final OrderMapper orderMapper;
+    private  final EmailNotificationService emailNotificationService;
+
     @Override
     public OrderResponseDto createOrder(OrderRequestDto dto,Long modelId) {
         String email = SecurityContextHolder.getContext()
@@ -36,7 +39,7 @@ public class OrderServiceImp implements OrderServiceInterface {
 
         Model model = modelRepository.findById(modelId)
                 .orElseThrow(() -> new RuntimeException("Model not found"));
-
+        User creator = model.getCreator();
 
         if (dto.getOrderType() == OrderType.RENTAL) {
             if (dto.getReservation_days() == null || dto.getReservation_days() <= 0) {
@@ -53,6 +56,12 @@ public class OrderServiceImp implements OrderServiceInterface {
             order.setReservationDate(dto.getReservationDate());
         }
         Order savedOrder = orderRepository.save(order);
+        emailNotificationService.sendEmailToCreator( creator.getEmail(),
+                "Nouvelle commande reçue 📦",
+                "Bonjour " + creator.getUsername() + ",\n\n" +
+                        "Une nouvelle commande a été créée pour votre modèle : " +
+                        model.getName() + ".\n\n" +
+                        "Client : " + client.getEmail());
         return orderMapper.toDto(savedOrder);
     }
 }
