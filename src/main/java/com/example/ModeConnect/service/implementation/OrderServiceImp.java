@@ -17,6 +17,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class OrderServiceImp implements OrderServiceInterface {
@@ -64,4 +66,20 @@ public class OrderServiceImp implements OrderServiceInterface {
                         "Client : " + client.getEmail());
         return orderMapper.toDto(savedOrder);
     }
+
+    @Override
+    public List<OrderResponseDto> getOrderCreator() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User creator = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+     List<Order> ordersCreatoreList= orderRepository.getOrdersByCreator(creator.getId());
+
+        return orderMapper.toDtoList(ordersCreatoreList);
+    }
+
+
 }
