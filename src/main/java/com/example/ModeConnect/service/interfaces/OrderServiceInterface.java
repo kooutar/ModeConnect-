@@ -12,4 +12,7 @@ public interface OrderServiceInterface {
             OrderRequestDto dto,Long modelId);
 
     public List<OrderResponseDto> getOrderCreator();
+    OrderResponseDto acceptOrder(Long orderId);
+
+    OrderResponseDto rejectOrder(Long orderId);
 }

@@ -76,9 +76,46 @@ public class OrderServiceImp implements OrderServiceInterface {
         User creator = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+
+
      List<Order> ordersCreatoreList= orderRepository.getOrdersByCreator(creator.getId());
 
         return orderMapper.toDtoList(ordersCreatoreList);
+    }
+
+    @Override
+    public OrderResponseDto acceptOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User creator = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if(order.getModel().getCreator()==creator){
+            order.setStatus(OrderStatus.ACCEPTED);
+            orderRepository.save(order);
+
+            return  orderMapper.toDto(order);
+        }else {
+            throw new RuntimeException("cette ordre n'est corespnad avous ");
+
+        }
+
+
+    }
+
+    @Override
+    public OrderResponseDto rejectOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(OrderStatus.REJECTED);
+        orderRepository.save(order);
+
+        return   orderMapper.toDto(order);
     }
 
 
