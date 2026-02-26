@@ -1,5 +1,10 @@
 package com.example.ModeConnect.service.implementation;
 
+import java.util.List;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.example.ModeConnect.DTO.request.OrderRequestDto;
 import com.example.ModeConnect.DTO.response.OrderResponseDto;
 import com.example.ModeConnect.Enums.OrderStatus;
@@ -13,9 +18,8 @@ import com.example.ModeConnect.model.Order;
 import com.example.ModeConnect.model.User;
 import com.example.ModeConnect.service.implementation.mail.EmailNotificationService;
 import com.example.ModeConnect.service.interfaces.OrderServiceInterface;
+
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -64,4 +68,74 @@ public class OrderServiceImp implements OrderServiceInterface {
                         "Client : " + client.getEmail());
         return orderMapper.toDto(savedOrder);
     }
+
+    @Override
+    public List<OrderResponseDto> getOrderCreator() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User creator = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+
+     List<Order> ordersCreatoreList= orderRepository.getOrdersByCreator(creator.getId());
+
+        return orderMapper.toDtoList(ordersCreatoreList);
+    }
+
+    @Override
+public OrderResponseDto acceptOrder(Long orderId) {
+    Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    String email = SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName();
+
+    User creator = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    if (!order.getModel().getCreator().getId().equals(creator.getId())) {
+        throw new RuntimeException("Vous ne pouvez accepter que vos propres orders");
+    }
+
+    order.setStatus(OrderStatus.ACCEPTED);
+    orderRepository.save(order);
+emailNotificationService.notifyUserOrderStatus(
+        order.getClient().getEmail(),          // owner de l’order
+        order.getModel().getName(),           // ou titre
+        OrderStatus.ACCEPTED
+);
+    return orderMapper.toDto(order);
+}
+
+   @Override
+    public OrderResponseDto rejectOrder(Long orderId) {
+    Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    String email = SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName();
+
+    User creator = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    if (!order.getModel().getCreator().getId().equals(creator.getId())) {
+        throw new RuntimeException("Vous ne pouvez rejeter que vos propres orders");
+    }
+
+    order.setStatus(OrderStatus.REJECTED);
+    orderRepository.save(order);
+  emailNotificationService.notifyUserOrderStatus(
+        order.getClient().getEmail(),          // owner de l’order
+        order.getModel().getName(),           // ou titre
+        OrderStatus.ACCEPTED
+);
+    return orderMapper.toDto(order);
+}
+
+
 }
