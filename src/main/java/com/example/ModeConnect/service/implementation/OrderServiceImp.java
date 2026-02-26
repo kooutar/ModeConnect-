@@ -84,39 +84,48 @@ public class OrderServiceImp implements OrderServiceInterface {
     }
 
     @Override
-    public OrderResponseDto acceptOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        String email = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
+public OrderResponseDto acceptOrder(Long orderId) {
+    Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        User creator = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    String email = SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName();
 
-        if(order.getModel().getCreator()==creator){
-            order.setStatus(OrderStatus.ACCEPTED);
-            orderRepository.save(order);
+    User creator = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-            return  orderMapper.toDto(order);
-        }else {
-            throw new RuntimeException("cette ordre n'est corespnad avous ");
-
-        }
-
-
+    if (!order.getModel().getCreator().getId().equals(creator.getId())) {
+        throw new RuntimeException("Vous ne pouvez accepter que vos propres orders");
     }
 
-    @Override
+    order.setStatus(OrderStatus.ACCEPTED);
+    orderRepository.save(order);
+
+    return orderMapper.toDto(order);
+}
+
+   @Override
     public OrderResponseDto rejectOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+    Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        order.setStatus(OrderStatus.REJECTED);
-        orderRepository.save(order);
+    String email = SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName();
 
-        return   orderMapper.toDto(order);
+    User creator = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    if (!order.getModel().getCreator().getId().equals(creator.getId())) {
+        throw new RuntimeException("Vous ne pouvez rejeter que vos propres orders");
     }
+
+    order.setStatus(OrderStatus.REJECTED);
+    orderRepository.save(order);
+
+    return orderMapper.toDto(order);
+}
 
 
 }
