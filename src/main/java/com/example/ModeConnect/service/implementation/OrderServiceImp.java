@@ -1,5 +1,10 @@
 package com.example.ModeConnect.service.implementation;
 
+import java.util.List;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.example.ModeConnect.DTO.request.OrderRequestDto;
 import com.example.ModeConnect.DTO.response.OrderResponseDto;
 import com.example.ModeConnect.Enums.OrderStatus;
@@ -13,11 +18,8 @@ import com.example.ModeConnect.model.Order;
 import com.example.ModeConnect.model.User;
 import com.example.ModeConnect.service.implementation.mail.EmailNotificationService;
 import com.example.ModeConnect.service.interfaces.OrderServiceInterface;
-import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
@@ -101,7 +103,11 @@ public OrderResponseDto acceptOrder(Long orderId) {
 
     order.setStatus(OrderStatus.ACCEPTED);
     orderRepository.save(order);
-
+emailNotificationService.notifyUserOrderStatus(
+        order.getClient().getEmail(),          // owner de l’order
+        order.getModel().getName(),           // ou titre
+        OrderStatus.ACCEPTED
+);
     return orderMapper.toDto(order);
 }
 
@@ -123,7 +129,11 @@ public OrderResponseDto acceptOrder(Long orderId) {
 
     order.setStatus(OrderStatus.REJECTED);
     orderRepository.save(order);
-
+  emailNotificationService.notifyUserOrderStatus(
+        order.getClient().getEmail(),          // owner de l’order
+        order.getModel().getName(),           // ou titre
+        OrderStatus.ACCEPTED
+);
     return orderMapper.toDto(order);
 }
 
