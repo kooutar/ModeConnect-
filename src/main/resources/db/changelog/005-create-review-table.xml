@@ -1,0 +1,56 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="005-create-review-table" author="kaoutar">
+
+        <createTable tableName="reviews">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="comment" type="TEXT"/>
+
+            <column name="rate" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP"
+                    defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <!-- Foreign key to users -->
+        <addForeignKeyConstraint
+                baseTableName="reviews"
+                baseColumnNames="client_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_review_client"
+                onDelete="CASCADE"/>
+
+        <!-- Foreign key to orders -->
+        <addForeignKeyConstraint
+                baseTableName="reviews"
+                baseColumnNames="order_id"
+                referencedTableName="orders"
+                referencedColumnNames="id"
+                constraintName="fk_review_order"
+                onDelete="CASCADE"/>
+
+        <!-- Rate between 1 and 5: use raw SQL to add the check constraint for compatibility -->
+        <sql>ALTER TABLE reviews ADD CONSTRAINT chk_review_rate CHECK (rate BETWEEN 1 AND 5);</sql>
+
+    </changeSet>
+
+</databaseChangeLog>

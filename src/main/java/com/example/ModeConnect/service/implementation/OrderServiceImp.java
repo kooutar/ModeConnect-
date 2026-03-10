@@ -45,6 +45,13 @@ public class OrderServiceImp implements OrderServiceInterface {
                 .orElseThrow(() -> new RuntimeException("Model not found"));
         User creator = model.getCreator();
 
+        // === Nouvelle vérification : le client a-t-il déjà commandé ce modèle ? ===
+        boolean alreadyOrdered = orderRepository.existsByClientIdAndModelId(client.getId(), model.getId());
+        if(alreadyOrdered) {
+            // Vous pouvez personnaliser l'exception ou renvoyer un objet ResponseEntity au controller selon vos conventions
+            throw new RuntimeException("Vous avez déjà passé une commande pour ce modèle.");
+        }
+
         if (dto.getOrderType() == OrderType.RENTAL) {
             if (dto.getReservation_days() == null || dto.getReservation_days() <= 0) {
                 throw new RuntimeException("Reservation days are required for rental orders");
@@ -86,7 +93,7 @@ public class OrderServiceImp implements OrderServiceInterface {
     }
 
     @Override
-public OrderResponseDto acceptOrder(Long orderId) {
+    public OrderResponseDto acceptOrder(Long orderId) {
     Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new RuntimeException("Order not found"));
 
@@ -104,8 +111,8 @@ public OrderResponseDto acceptOrder(Long orderId) {
     order.setStatus(OrderStatus.ACCEPTED);
     orderRepository.save(order);
 emailNotificationService.notifyUserOrderStatus(
-        order.getClient().getEmail(),          // owner de l’order
-        order.getModel().getName(),           // ou titre
+        order.getClient().getEmail(),          
+        order.getModel().getName(),           
         OrderStatus.ACCEPTED
 );
     return orderMapper.toDto(order);
@@ -130,12 +137,24 @@ emailNotificationService.notifyUserOrderStatus(
     order.setStatus(OrderStatus.REJECTED);
     orderRepository.save(order);
   emailNotificationService.notifyUserOrderStatus(
-        order.getClient().getEmail(),          // owner de l’order
-        order.getModel().getName(),           // ou titre
+        order.getClient().getEmail(),          
+        order.getModel().getName(),           
         OrderStatus.ACCEPTED
 );
     return orderMapper.toDto(order);
 }
 
+   @Override
+    public List<OrderResponseDto> getOrdersByClient() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User client = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Order> orders = orderRepository.findByClientId(client.getId());
+        return orderMapper.toDtoList(orders);
+    }
 
 }
