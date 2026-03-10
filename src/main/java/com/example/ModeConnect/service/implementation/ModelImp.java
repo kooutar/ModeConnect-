@@ -4,11 +4,13 @@ import com.example.ModeConnect.DTO.request.ModelMediaRequestDto;
 import com.example.ModeConnect.DTO.request.ModelRequestDto;
 import com.example.ModeConnect.DTO.response.ModelResponseDto;
 import com.example.ModeConnect.Repository.ModelRepository;
+import com.example.ModeConnect.Repository.OrderRepository;
 import com.example.ModeConnect.Repository.UserRepository;
 import com.example.ModeConnect.mapper.MapperModel;
 import com.example.ModeConnect.model.Model;
 import com.example.ModeConnect.model.ModelMedia;
 import com.example.ModeConnect.model.User;
+import com.example.ModeConnect.Enums.OrderType;
 import com.example.ModeConnect.service.interfaces.ModelInterface;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class ModelImp implements ModelInterface {
     private final ModelRepository modelRepository;
     private final MapperModel modelMapper;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository; // injecté
 
     // ================= CREATE =================
     @Override
@@ -75,6 +79,28 @@ public class ModelImp implements ModelInterface {
                 .orElseThrow(() -> new RuntimeException("Model not found"));
 
         return modelMapper.toDto(model);
+    }
+
+    // ================= NEW: find models rented by current user =================
+    @Override
+    public List<ModelResponseDto> findRentedByCurrentUser() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User client = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // récupérer toutes les commandes de type RENTAL pour ce client
+        List<com.example.ModeConnect.model.Order> rentalOrders = orderRepository.findByClientIdAndOrderType(client.getId(), OrderType.RENTAL);
+
+        // extraire les models uniques
+        List<Model> models = rentalOrders.stream()
+                .map(o -> o.getModel())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return modelMapper.toDtoList(models);
     }
 
     // ================= UPDATE =================
@@ -130,4 +156,3 @@ public class ModelImp implements ModelInterface {
         modelRepository.delete(model);
     }
 }
-

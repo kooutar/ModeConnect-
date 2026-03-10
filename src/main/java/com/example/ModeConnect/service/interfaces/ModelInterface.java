@@ -16,4 +16,7 @@ public interface ModelInterface {
 
     void delete(Long id);
 
+    // Récupérer tous les modèles loués par l'utilisateur connecté
+    List<ModelResponseDto> findRentedByCurrentUser();
+
 }

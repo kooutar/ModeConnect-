@@ -15,4 +15,7 @@ public interface OrderServiceInterface {
     OrderResponseDto acceptOrder(Long orderId);
 
     OrderResponseDto rejectOrder(Long orderId);
+
+    // Récupérer toutes les commandes du client connecté
+    List<OrderResponseDto> getOrdersByClient();
 }

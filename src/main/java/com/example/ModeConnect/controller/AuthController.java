@@ -50,16 +50,6 @@ public class AuthController {
             // 1. Authentification via AuthService (qui fait tout)
             LoginResponse loginResponse = authService.login(request);
 
-            // 2. Créer le cookie HttpOnly avec le token du service
-            Cookie cookie = new Cookie("JWT_TOKEN", loginResponse.getToken());
-            cookie.setHttpOnly(true);
-            cookie.setSecure(false);
-            cookie.setPath("/");
-            cookie.setMaxAge(60 * 60);
-
-            response.addCookie(cookie);
-
-            // 3. Retourner la réponse
             return ResponseEntity.ok(loginResponse);
 
 
