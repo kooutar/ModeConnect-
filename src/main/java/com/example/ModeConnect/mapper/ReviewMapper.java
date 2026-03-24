@@ -9,6 +9,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
 
@@ -21,6 +23,8 @@ public interface ReviewMapper {
     @Mapping(target = "clientName", source = "client.username")
     @Mapping(target = "orderId", source = "order.id")
     ReviewResponseDto toDto(Review review);
+
+    List<ReviewResponseDto> toDtoList(List<Review> reviews);
 
     @Named("idToUser")
     default User idToUser(Long id) {
@@ -43,4 +47,3 @@ public interface ReviewMapper {
         return order;
     }
 }
-

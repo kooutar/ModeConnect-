@@ -17,4 +17,5 @@ public class ModelResponseDto {
     private String creatorName;
     private Boolean available;
     private List<ModelMediaDto> mediaList;
+    private List<ReviewResponseDto> reviews; // Liste des reviews associées au modèle
 }

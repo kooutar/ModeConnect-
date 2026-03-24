@@ -5,8 +5,10 @@ import com.example.ModeConnect.DTO.request.ModelRequestDto;
 import com.example.ModeConnect.DTO.response.ModelResponseDto;
 import com.example.ModeConnect.Repository.ModelRepository;
 import com.example.ModeConnect.Repository.OrderRepository;
+import com.example.ModeConnect.Repository.ReviewRepository;
 import com.example.ModeConnect.Repository.UserRepository;
 import com.example.ModeConnect.mapper.MapperModel;
+import com.example.ModeConnect.mapper.ReviewMapper;
 import com.example.ModeConnect.model.Model;
 import com.example.ModeConnect.model.ModelMedia;
 import com.example.ModeConnect.model.User;
@@ -31,6 +33,8 @@ public class ModelImp implements ModelInterface {
     private final MapperModel modelMapper;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository; // injecté
+    private final ReviewRepository reviewRepository; // nouvellement injecté
+    private final ReviewMapper reviewMapper; // nouvellement injecté
 
     // ================= CREATE =================
     @Override
@@ -69,7 +73,18 @@ public class ModelImp implements ModelInterface {
     // ================= READ ALL =================
     @Override
     public List<ModelResponseDto> findAll() {
-        return modelMapper.toDtoList(modelRepository.findAll());
+        List<Model> models = modelRepository.findAll();
+        List<ModelResponseDto> dtos = modelMapper.toDtoList(models);
+
+        // enrichir chaque dto avec ses reviews
+        for (int i = 0; i < models.size(); i++) {
+            Model model = models.get(i);
+            ModelResponseDto dto = dtos.get(i);
+            List<com.example.ModeConnect.model.Review> reviews = reviewRepository.findByModelId(model.getId());
+            dto.setReviews(reviewMapper.toDtoList(reviews));
+        }
+
+        return dtos;
     }
 
     // ================= READ BY ID =================
