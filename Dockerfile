@@ -4,7 +4,7 @@
 FROM maven:3.9.4-eclipse-temurin-17 AS build
 WORKDIR /workspace
 # copy only what is needed for a reproducible build
-COPY pom.xml mvnw mvnw./cmd .mvn/ ./
+COPY pom.xml mvnw mvnw.cmd .mvn/ ./
 COPY src ./src
 
 # build the jar (skip tests for faster builds; remove -DskipTests to run tests)
@@ -27,4 +27,3 @@ EXPOSE 8080
 ENV JAVA_OPTS=""
 
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
-
